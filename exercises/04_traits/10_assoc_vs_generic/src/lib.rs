@@ -3,6 +3,36 @@
 //  The trait definition and its implementations should be enough to get
 //  the tests to compile and pass.
 //
+
+// Copilot suggestion plus minor adjustment '<Rhs = Self>' to make Rhs default to Self.:
+pub trait Power<Rhs = Self> {
+    type Output;
+    fn power(self, rhs: Rhs) -> Self::Output;
+}
+
+impl Power<u16> for u32 {
+    type Output = u32;
+    fn power(self, rhs: u16) -> Self::Output {
+        self.pow(rhs as u32)
+    }
+}
+
+impl Power<u32> for u32 {
+    type Output = u32;
+    fn power(self, rhs: u32) -> Self::Output {
+        self.pow(rhs)
+    }
+}
+
+impl Power<&u32> for u32 {
+    type Output = u32;
+    fn power(self, rhs: &u32) -> Self::Output {
+        self.pow(*rhs)
+    }
+}
+
+// Output lets std decouple the implementor from the return type, thus supporting this case.
+
 // Recommendation: you may be tempted to write a generic implementation to handle
 // all cases at once. However, this is fairly complicated and requires the use of
 // additional crates (i.e. `num-traits`).
@@ -12,6 +42,28 @@
 // interested in learning more about it.
 // You don't have to though: it's perfectly okay to write three separate
 // implementations manually. Venture further only if you're curious.
+
+// My initial attempt with generics that doesn't work because of conflicting
+// implementations. This was not too far off though.
+
+// pub trait Power<Rhs> {
+//     type Output;
+//     fn power(self, rhs: Rhs) -> Self::Output;
+// }
+
+// impl Power<u32> for u32 {
+//     type Output = u32;
+//     fn power(self, rhs: u16) -> Self::Output {
+//         self.pow(rhs as u32)
+//     }
+// }
+
+// impl Power<u32> for u32 {
+//     type Output = u32;
+//     fn power(self, rhs: u32) -> Self::Output {
+//         self.pow(rhs)
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
